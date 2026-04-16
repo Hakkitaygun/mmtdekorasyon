@@ -293,9 +293,12 @@
           <option value="Diğer">Diğer</option>
         </select>
       </div>
-      <div class="full form-group">
-        <label>Görsel URL <span style="color:var(--text-dim);font-weight:400">(opsiyonel – imgur, imgbb gibi sitelere yükle)</span></label>
-        <input type="text" id="fImage" placeholder="https://i.imgur.com/..." />
+      
+        <div class="full form-group">
+        <label>Ürün Görseli (Bilgisayardan Seç)</label>
+        <input type="file" id="imageUpload" accept="image/*" onchange="uploadImage(this)" style="background: transparent; border: none; padding: 0;" />
+        <input type="hidden" id="fImage" />
+        <div id="uploadStatus" style="font-size: 0.8rem; margin-top: 8px; color: var(--accent);"></div>
       </div>
       <div class="form-group">
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
@@ -495,6 +498,8 @@ function openModal(id) {
     document.getElementById('fImage').value = '';
     document.getElementById('fActive').checked = true;
   }
+  document.getElementById('imageUpload').value = '';
+  document.getElementById('uploadStatus').textContent = '';
   modal.classList.add('open');
 }
 
@@ -539,7 +544,40 @@ async function toggleActive(id, active) {
   const p = products.find(x => x.id === id);
   if (p) { p.active = active; updateStats(); await saveToGitHub(); }
 }
+async function uploadImage(input) {
+  const file = input.files[0];
+  if (!file) return;
 
+  const status = document.getElementById('uploadStatus');
+  status.textContent = "⏳ Görsel yükleniyor, lütfen bekleyin...";
+  status.style.color = "var(--accent)";
+
+  const formData = new FormData();
+  formData.append("image", file);
+
+  try {
+    const apiKey = "4004cadf99eaa682de01f4877081db83"; 
+    
+    const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+      method: "POST",
+      body: formData
+    });
+    
+    const data = await res.json();
+
+    if (data.success) {
+      document.getElementById('fImage').value = data.data.url;
+      status.textContent = "✓ Görsel başarıyla yüklendi!";
+      status.style.color = "var(--success)";
+    } else {
+      status.textContent = "✗ Yükleme hatası: " + data.error.message;
+      status.style.color = "var(--danger)";
+    }
+  } catch (e) {
+     status.textContent = "✗ Bağlantı hatası.";
+     status.style.color = "var(--danger)";
+  }
+}
 // ---- UTILS ----
 function v(id) { return document.getElementById(id).value; }
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
