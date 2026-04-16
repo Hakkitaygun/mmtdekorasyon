@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MMT Dekorasyon – El Yapımı Mobilya</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5F0E8;
+    --warm-white: #FAF8F4;
+    --oak: #8B6340;
+    --dark-oak: #4A2E14;
+    --walnut: #2C1A0E;
+    --accent: #C4883A;
+    --light-oak: #D4A76A;
+    --text: #1A1008;
+    --text-muted: #6B5040;
+    --border: rgba(139,99,64,0.18);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--warm-white); color: var(--text); overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(250,248,244,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--dark-oak); letter-spacing: 0.04em; }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { font-size: 0.85rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; color: var(--text-muted); transition: color 0.2s; }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta { background: var(--dark-oak); color: var(--cream); padding: 0.6rem 1.4rem; border-radius: 2px; font-size: 0.82rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; transition: background 0.2s; }
+  .nav-cta:hover { background: var(--accent); }
+
+  .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; padding-top: 80px; }
+  .hero-left { background: var(--walnut); display: flex; flex-direction: column; justify-content: center; padding: 6rem 5rem; position: relative; overflow: hidden; }
+  .hero-left::before { content: ''; position: absolute; top: -60px; right: -60px; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, rgba(196,136,58,0.15) 0%, transparent 70%); }
+  .hero-tag { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--light-oak); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; }
+  .hero-tag::before { content: ''; width: 30px; height: 1px; background: var(--light-oak); }
+  .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 5vw, 4.2rem); font-weight: 900; line-height: 1.1; color: var(--cream); margin-bottom: 1.5rem; }
+  .hero-title em { color: var(--accent); font-style: italic; }
+  .hero-desc { font-size: 1rem; line-height: 1.75; color: rgba(245,240,232,0.65); max-width: 380px; margin-bottom: 2.5rem; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary { background: var(--accent); color: white; padding: 0.9rem 2rem; border-radius: 2px; font-size: 0.88rem; font-weight: 500; letter-spacing: 0.06em; text-decoration: none; text-transform: uppercase; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary:hover { background: var(--light-oak); transform: translateY(-2px); }
+  .btn-outline { border: 1px solid rgba(245,240,232,0.3); color: var(--cream); padding: 0.9rem 2rem; border-radius: 2px; font-size: 0.88rem; font-weight: 500; letter-spacing: 0.06em; text-decoration: none; text-transform: uppercase; transition: all 0.2s; }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+  .hero-right { background: var(--cream); display: flex; flex-direction: column; justify-content: flex-end; padding: 4rem; position: relative; overflow: hidden; }
+  .wood-pattern { position: absolute; inset: 0; background: repeating-linear-gradient(168deg, transparent 0px, transparent 28px, rgba(139,99,64,0.04) 28px, rgba(139,99,64,0.04) 30px), repeating-linear-gradient(172deg, transparent 0px, transparent 18px, rgba(74,46,20,0.03) 18px, rgba(74,46,20,0.03) 20px); }
+  .hero-stats { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; background: var(--border); border: 1px solid var(--border); }
+  .stat { background: var(--warm-white); padding: 1.8rem 1.4rem; text-align: center; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 900; color: var(--dark-oak); line-height: 1; }
+  .stat-label { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 6px; }
+  .hero-img-area { position: relative; z-index: 1; flex: 1; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem; }
+
+  .marquee-strip { background: var(--dark-oak); padding: 0.9rem 0; overflow: hidden; white-space: nowrap; }
+  .marquee-inner { display: inline-flex; gap: 3rem; animation: marquee 20s linear infinite; }
+  .marquee-item { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--light-oak); font-weight: 500; display: inline-flex; align-items: center; gap: 1rem; }
+  .marquee-item::after { content: '✦'; color: var(--accent); font-size: 0.6rem; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  section { padding: 6rem 4rem; }
+  .section-label { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); font-weight: 500; display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+  .section-label::before { content: ''; width: 24px; height: 1px; background: var(--accent); }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 700; color: var(--dark-oak); line-height: 1.15; margin-bottom: 1rem; }
+  .section-sub { font-size: 1rem; color: var(--text-muted); line-height: 1.7; max-width: 500px; margin-bottom: 3rem; }
+
+  #urunler { background: var(--cream); }
+  .products-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
+  .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2px; background: var(--border); border: 1px solid var(--border); }
+
+  .product-card { background: var(--warm-white); transition: all 0.3s; cursor: default; }
+  .product-card:hover { background: white; transform: scale(1.01); z-index: 2; box-shadow: 0 8px 40px rgba(44,26,14,0.12); }
+  .product-img { height: 220px; display: flex; align-items: center; justify-content: center; background: var(--cream); overflow: hidden; position: relative; }
+  .product-img img { width: 100%; height: 100%; object-fit: cover; }
+  .product-img .no-img { opacity: 0.3; }
+  .product-body { padding: 1.4rem 1.6rem; }
+  .product-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--dark-oak); margin-bottom: 0.4rem; }
+  .product-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem; }
+  .product-footer { display: flex; justify-content: space-between; align-items: center; }
+  .product-material { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 500; }
+  .product-order { background: var(--dark-oak); color: var(--cream); padding: 0.5rem 1rem; border-radius: 2px; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.05em; text-decoration: none; transition: background 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+  .product-order:hover { background: var(--accent); }
+  .product-card.special { background: var(--dark-oak); }
+  .product-card.special .product-img { background: rgba(74,46,20,0.4); }
+  .product-card.special .product-name { color: var(--cream); }
+  .product-card.special .product-desc { color: rgba(245,240,232,0.6); }
+  .product-card.special .product-order { background: var(--accent); }
+
+  #hakkimizda { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; background: var(--warm-white); }
+  .about-visual { background: var(--walnut); border-radius: 2px; padding: 4rem; display: flex; flex-direction: column; gap: 2px; min-height: 460px; justify-content: flex-end; position: relative; overflow: hidden; }
+  .about-visual::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(160deg, transparent 0, transparent 40px, rgba(196,136,58,0.06) 40px, rgba(196,136,58,0.06) 42px); }
+  .about-quote { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-style: italic; color: var(--cream); line-height: 1.5; position: relative; z-index: 1; }
+  .about-quote-name { font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--light-oak); margin-top: 1rem; position: relative; z-index: 1; }
+  .features { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem; }
+  .feature { display: flex; gap: 1rem; align-items: flex-start; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .feature:last-child { border-bottom: none; padding-bottom: 0; }
+  .feature-icon { width: 40px; height: 40px; background: var(--cream); border-radius: 2px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.1rem; }
+  .feature-title { font-weight: 500; font-size: 0.95rem; color: var(--dark-oak); margin-bottom: 3px; }
+  .feature-text { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+
+  #iletisim { background: var(--walnut); text-align: center; padding: 7rem 4rem; position: relative; overflow: hidden; }
+  #iletisim::before { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(196,136,58,0.08) 0%, transparent 70%); }
+  #iletisim .section-label { justify-content: center; }
+  #iletisim .section-label::before { display: none; }
+  #iletisim .section-title { color: var(--cream); margin: 0 auto 1rem; }
+  #iletisim .section-sub { color: rgba(245,240,232,0.55); margin: 0 auto 3rem; }
+  .contact-cards { display: flex; gap: 2px; justify-content: center; flex-wrap: wrap; max-width: 800px; margin: 0 auto 3rem; background: rgba(245,240,232,0.06); border: 1px solid rgba(245,240,232,0.08); }
+  .contact-card { flex: 1; min-width: 200px; background: rgba(245,240,232,0.04); padding: 2rem 1.5rem; text-align: center; }
+  .contact-card-icon { font-size: 1.5rem; margin-bottom: 0.8rem; }
+  .contact-card-label { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--light-oak); margin-bottom: 0.5rem; }
+  .contact-card-val { font-size: 0.95rem; color: var(--cream); font-weight: 500; }
+  .whatsapp-btn { display: inline-flex; align-items: center; gap: 12px; background: #25D366; color: white; padding: 1.1rem 2.8rem; border-radius: 2px; font-size: 1rem; font-weight: 500; letter-spacing: 0.04em; text-decoration: none; transition: all 0.25s; position: relative; z-index: 1; }
+  .whatsapp-btn:hover { background: #1ebe59; transform: translateY(-3px); box-shadow: 0 10px 30px rgba(37,211,102,0.3); }
+  .whatsapp-btn svg { width: 22px; height: 22px; }
+
+  footer { background: var(--walnut); border-top: 1px solid rgba(245,240,232,0.08); padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 900; color: var(--cream); }
+  .footer-logo span { color: var(--accent); }
+  .footer-copy { font-size: 0.78rem; color: rgba(245,240,232,0.35); }
+  .footer-admin { font-size: 0.72rem; color: rgba(245,240,232,0.2); text-decoration: none; }
+  .footer-admin:hover { color: var(--light-oak); }
+
+  .float-wa { position: fixed; bottom: 2rem; right: 2rem; z-index: 999; background: #25D366; color: white; width: 58px; height: 58px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(37,211,102,0.4); text-decoration: none; transition: all 0.25s; animation: pulse-wa 2.5s ease-in-out infinite; }
+  .float-wa:hover { transform: scale(1.1); }
+  .float-wa svg { width: 28px; height: 28px; }
+  @keyframes pulse-wa { 0%, 100% { box-shadow: 0 4px 20px rgba(37,211,102,0.4); } 50% { box-shadow: 0 4px 32px rgba(37,211,102,0.7); } }
+
+  .loading-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2px; }
+  .skeleton { background: linear-gradient(90deg, #e8e0d4 25%, #f0e8dc 50%, #e8e0d4 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; height: 340px; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-left { padding: 4rem 2rem; min-height: 60vh; }
+    .hero-right { padding: 3rem 2rem; }
+    #hakkimizda { grid-template-columns: 1fr; padding: 4rem 2rem; gap: 3rem; }
+    section { padding: 4rem 2rem; }
+    footer { padding: 1.5rem 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">MMT<span>.</span>Dekorasyon</div>
+  <ul class="nav-links">
+    <li><a href="#urunler">Ürünler</a></li>
+    <li><a href="#hakkimizda">Hakkımızda</a></li>
+    <li><a href="#iletisim">İletişim</a></li>
+  </ul>
+  <a href="https://wa.me/905385168532?text=Merhaba%2C%20sipariş%20vermek%20istiyorum." class="nav-cta" target="_blank">Sipariş Ver</a>
+</nav>
+
+<section class="hero" id="anasayfa">
+  <div class="hero-left">
+    <div class="hero-tag">El Yapımı Mobilya</div>
+    <h1 class="hero-title">Ahşabın<br><em>Ruhu</em> Evinizde</h1>
+    <p class="hero-desc">Her parça, ustanın elinden geçerek hayat buluyor. Masif ahşapla işlenen özgün tasarımlar, evinize sıcaklık ve karakter katıyor.</p>
+    <div class="hero-btns">
+      <a href="#urunler" class="btn-primary">Ürünleri Gör</a>
+      <a href="https://wa.me/905385168532?text=Merhaba%2C%20bilgi%20almak%20istiyorum." class="btn-outline" target="_blank">WhatsApp'tan Yaz</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="wood-pattern"></div>
+    <div class="hero-img-area">
+      <svg width="160" height="160" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:0.3">
+        <rect x="20" y="100" width="140" height="16" rx="3" fill="#8B6340"/>
+        <rect x="30" y="40" width="120" height="62" rx="4" fill="#4A2E14" opacity="0.6"/>
+        <rect x="30" y="40" width="120" height="8" rx="2" fill="#8B6340"/>
+        <rect x="40" y="116" width="14" height="28" rx="2" fill="#4A2E14" opacity="0.8"/>
+        <rect x="126" y="116" width="14" height="28" rx="2" fill="#4A2E14" opacity="0.8"/>
+        <line x1="50" y1="48" x2="45" y2="102" stroke="#C4883A" stroke-width="1.5" opacity="0.5"/>
+        <line x1="80" y1="48" x2="78" y2="102" stroke="#C4883A" stroke-width="1.5" opacity="0.5"/>
+        <line x1="110" y1="48" x2="108" y2="102" stroke="#C4883A" stroke-width="1.5" opacity="0.5"/>
+        <line x1="140" y1="48" x2="135" y2="102" stroke="#C4883A" stroke-width="1.5" opacity="0.5"/>
+      </svg>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">10+</div><div class="stat-label">Yıl Deneyim</div></div>
+      <div class="stat"><div class="stat-num">500+</div><div class="stat-label">Mutlu Müşteri</div></div>
+      <div class="stat"><div class="stat-num">%100</div><div class="stat-label">El İşçiliği</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-strip">
+  <div class="marquee-inner">
+    <span class="marquee-item">Masif Ahşap</span>
+    <span class="marquee-item">El İşçiliği</span>
+    <span class="marquee-item">Özel Sipariş</span>
+    <span class="marquee-item">Meşe & Ceviz</span>
+    <span class="marquee-item">Özgün Tasarım</span>
+    <span class="marquee-item">Dayanıklı & Uzun Ömürlü</span>
+    <span class="marquee-item">Masif Ahşap</span>
+    <span class="marquee-item">El İşçiliği</span>
+    <span class="marquee-item">Özel Sipariş</span>
+    <span class="marquee-item">Meşe & Ceviz</span>
+    <span class="marquee-item">Özgün Tasarım</span>
+    <span class="marquee-item">Dayanıklı & Uzun Ömürlü</span>
+  </div>
+</div>
+
+<section id="urunler">
+  <div class="products-header">
+    <div>
+      <div class="section-label">Koleksiyonumuz</div>
+      <h2 class="section-title">Mobilya Ürünleri</h2>
+    </div>
+    <p class="section-sub" style="margin-bottom:0;">Tüm ürünler sipariş üzerine üretilmektedir. Ölçü ve renk seçenekleri için bizimle iletişime geçin.</p>
+  </div>
+  <div class="products-grid" id="productsGrid">
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+  </div>
+</section>
+
+<section id="hakkimizda">
+  <div class="about-visual">
+    <p class="about-quote">"Her ahşap parçada bir ağacın ömrü, bir ustanın sabrı vardır."</p>
+    <div class="about-quote-name">— MMT Dekorasyon Ustası</div>
+  </div>
+  <div>
+    <div class="section-label">Biz Kimiz</div>
+    <h2 class="section-title">Ahşaba Duyulan<br>Tutku</h2>
+    <p class="section-sub">MMT Dekorasyon olarak yılların deneyimi ve el işçiliğiyle her parçayı özenle üretiyoruz. Sanayi üretiminin mümkün kılamayacağı detayları, ustalarımızın elleri hayata geçiriyor.</p>
+    <div class="features">
+      <div class="feature"><div class="feature-icon">🪵</div><div><div class="feature-title">Seçkin Malzeme</div><div class="feature-text">Sadece birinci sınıf, doğal kurutulmuş masif ahşap kullanıyoruz.</div></div></div>
+      <div class="feature"><div class="feature-icon">📐</div><div><div class="feature-title">Ölçüye Özel Üretim</div><div class="feature-text">Her ürün sizin evinize, zevkinize ve ihtiyacınıza göre tasarlanır.</div></div></div>
+      <div class="feature"><div class="feature-icon">🤝</div><div><div class="feature-title">WhatsApp ile Kolay Sipariş</div><div class="feature-text">Ürün görseli, ölçü ve fiyat için tek mesaj yeterli — hızlı ve kolay.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="iletisim">
+  <div class="section-label">Bize Ulaşın</div>
+  <h2 class="section-title">Sipariş & İletişim</h2>
+  <p class="section-sub">Ürünler hakkında bilgi almak, fiyat sormak veya sipariş vermek için WhatsApp'tan yazın.</p>
+  <div class="contact-cards">
+    <div class="contact-card"><div class="contact-card-icon">📱</div><div class="contact-card-label">WhatsApp & Telefon</div><div class="contact-card-val">0538 516 85 32</div></div>
+    <div class="contact-card"><div class="contact-card-icon">⏰</div><div class="contact-card-label">Çalışma Saatleri</div><div class="contact-card-val">Haftaiçi 09:00 – 18:00</div></div>
+    <div class="contact-card"><div class="contact-card-icon">🚚</div><div class="contact-card-label">Teslimat</div><div class="contact-card-val">Türkiye Geneli</div></div>
+  </div>
+  <a href="https://wa.me/905385168532?text=Merhaba%2C%20MMT%20Dekorasyon%20hakkında%20bilgi%20almak%20istiyorum." class="whatsapp-btn" target="_blank">
+    <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.532 5.875L0 24l6.293-1.507A11.946 11.946 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.651-.52-5.162-1.418L3 21.5l.937-3.74A9.963 9.963 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+    WhatsApp'tan Sipariş Ver
+  </a>
+</section>
+
+<footer>
+  <div class="footer-logo">MMT<span>.</span>Dekorasyon</div>
+  <div class="footer-copy">© 2025 MMT Dekorasyon. Tüm hakları saklıdır.</div>
+  <a href="admin.html" class="footer-admin">Yönetici</a>
+</footer>
+
+<a href="https://wa.me/905385168532?text=Merhaba%2C%20sipariş%20vermek%20istiyorum." class="float-wa" target="_blank">
+  <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.532 5.875L0 24l6.293-1.507A11.946 11.946 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.651-.52-5.162-1.418L3 21.5l.937-3.74A9.963 9.963 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+</a>
+
+<script>
+const WA = '905385168532';
+
+function waIcon() {
+  return `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.131.558 4.133 1.532 5.875L0 24l6.293-1.507A11.946 11.946 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.651-.52-5.162-1.418L3 21.5l.937-3.74A9.963 9.963 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>`;
+}
+
+function productCardHTML(p) {
+  const isSpecial = p.category === 'Özel';
+  const waMsg = encodeURIComponent(`Merhaba, ${p.name} hakkında bilgi almak istiyorum.`);
+  const waLink = `https://wa.me/${WA}?text=${waMsg}`;
+  const imgHTML = p.image
+    ? `<img src="${p.image}" alt="${p.name}" />`
+    : `<svg class="no-img" width="70" height="70" viewBox="0 0 80 80" fill="none"><rect x="10" y="28" width="60" height="8" rx="2" fill="#4A2E14"/><rect x="14" y="36" width="6" height="24" rx="1.5" fill="#4A2E14"/><rect x="60" y="36" width="6" height="24" rx="1.5" fill="#4A2E14"/></svg>`;
+  const orderStyle = isSpecial ? 'style="background:var(--accent);"' : '';
+  return `
+    <div class="product-card${isSpecial ? ' special' : ''}">
+      <div class="product-img">${imgHTML}</div>
+      <div class="product-body">
+        <div class="product-name">${p.name}</div>
+        <div class="product-desc">${p.desc}</div>
+        <div class="product-footer">
+          <span class="product-material">${p.material}</span>
+          <a href="${waLink}" class="product-order" ${orderStyle} target="_blank">${waIcon()} Sipariş Ver</a>
+        </div>
+      </div>
+    </div>`;
+}
+
+async function loadProducts() {
+  const grid = document.getElementById('productsGrid');
+  try {
+    const res = await fetch('products.json?v=' + Date.now());
+    const products = await res.json();
+    const active = products.filter(p => p.active !== false);
+    grid.innerHTML = active.length ? active.map(productCardHTML).join('') : '<p style="padding:2rem;color:var(--text-muted);">Henüz ürün eklenmemiş.</p>';
+  } catch(e) {
+    grid.innerHTML = '<p style="padding:2rem;color:var(--text-muted);">Ürünler yüklenemedi.</p>';
+  }
+}
+
+loadProducts();
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+[
+  {
+    "id": "1",
+    "name": "Masif Yemek Masası",
+    "desc": "Meşe ya da ceviz kütükten işlenen sağlam yemek masaları. 4–8 kişilik boyut seçeneği mevcuttur.",
+    "material": "Meşe / Ceviz",
+    "category": "Masa",
+    "image": "",
+    "active": true
+  },
+  {
+    "id": "2",
+    "name": "El Yapımı Sandalye",
+    "desc": "Ergonomik tasarımlı, sağlam ve dayanıklı ahşap sandalyeler. Kumaş kaplama seçeneği de mevcuttur.",
+    "material": "Kayın / Meşe",
+    "category": "Sandalye",
+    "image": "",
+    "active": true
+  },
+  {
+    "id": "3",
+    "name": "Ahşap Gardırop",
+    "desc": "2 veya 3 kapılı, özel bölmeli masif gardıroplar. İstenilen renk ve ölçüde sipariş alınır.",
+    "material": "Ladin / Meşe",
+    "category": "Dolap",
+    "image": "",
+    "active": true
+  },
+  {
+    "id": "4",
+    "name": "Duvar Kitaplığı",
+    "desc": "Modüler veya tek parça kitaplıklar. Evinizin duvarına özel ölçü alınarak üretilir.",
+    "material": "Masif Çam",
+    "category": "Kitaplık",
+    "image": "",
+    "active": true
+  },
+  {
+    "id": "5",
+    "name": "Ahşap TV Ünitesi",
+    "desc": "Modern ve rustik seçeneklerle TV üniteleri. Gizli kablo kanalı ve bölmeli tasarımlar.",
+    "material": "Meşe / Ceviz",
+    "category": "TV Ünitesi",
+    "image": "",
+    "active": true
+  },
+  {
+    "id": "6",
+    "name": "Özel Tasarım",
+    "desc": "Hayalinizdeki mobilyayı birlikte tasarlayalım. Ölçü, malzeme ve rengi siz seçin.",
+    "material": "Her Malzeme",
+    "category": "Özel",
+    "image": "",
+    "active": true
+  }
+]
