@@ -61,5 +61,14 @@
     "category": "Masa",
     "image": "https://www.akbrella.com.tr/80x120-atina-sabit-ayakli-masa?srsltid=AfmBOorRfdnxBMiw9v9q0Fy2xz2iuCJXevHKxg4uLK_WZPrYVBSnbEFp",
     "active": true
+  },
+  {
+    "id": "1776361764165",
+    "name": "masa3",
+    "desc": "aaaaa",
+    "material": "aaa",
+    "category": "Masa",
+    "image": "https://i.ibb.co/5xJzDhW3/indir.jpg",
+    "active": true
   }
 ]
