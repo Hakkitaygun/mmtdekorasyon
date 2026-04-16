@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MMT Dekorasyon – Yönetici Paneli</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0F0A06;
+    --surface: #1A1008;
+    --surface2: #241608;
+    --border: rgba(196,136,58,0.15);
+    --border2: rgba(196,136,58,0.3);
+    --accent: #C4883A;
+    --accent-light: #D4A76A;
+    --text: #F5F0E8;
+    --text-muted: rgba(245,240,232,0.5);
+    --text-dim: rgba(245,240,232,0.25);
+    --success: #2ECC71;
+    --danger: #E74C3C;
+    --oak: #8B6340;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* SETUP SCREEN */
+  #setupScreen {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 2rem;
+  }
+  .setup-card {
+    background: var(--surface); border: 1px solid var(--border2);
+    border-radius: 8px; padding: 3rem; max-width: 500px; width: 100%;
+  }
+  .setup-logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--text); margin-bottom: 0.3rem; }
+  .setup-logo span { color: var(--accent); }
+  .setup-subtitle { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 2.5rem; }
+  .setup-step { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; }
+  .form-group { margin-bottom: 1.2rem; }
+  label { display: block; font-size: 0.8rem; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.04em; }
+  input[type="text"], input[type="password"] {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 4px; padding: 0.7rem 1rem; color: var(--text);
+    font-size: 0.9rem; font-family: inherit; outline: none; transition: border 0.2s;
+  }
+  input:focus { border-color: var(--accent); }
+  input::placeholder { color: var(--text-dim); }
+  .hint { font-size: 0.75rem; color: var(--text-dim); margin-top: 5px; line-height: 1.5; }
+  .hint a { color: var(--accent-light); }
+  .btn { width: 100%; background: var(--accent); color: white; border: none; padding: 0.85rem; border-radius: 4px; font-size: 0.9rem; font-weight: 500; cursor: pointer; font-family: inherit; transition: all 0.2s; margin-top: 1rem; }
+  .btn:hover { background: var(--accent-light); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-secondary { background: transparent; border: 1px solid var(--border2); color: var(--text-muted); margin-top: 0.5rem; }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: transparent; }
+  .alert { padding: 0.75rem 1rem; border-radius: 4px; font-size: 0.83rem; margin-bottom: 1rem; }
+  .alert-err { background: rgba(231,76,60,0.12); border: 1px solid rgba(231,76,60,0.3); color: #e74c3c; }
+  .alert-ok { background: rgba(46,204,113,0.12); border: 1px solid rgba(46,204,113,0.3); color: #2ecc71; }
+
+  /* LOGIN SCREEN */
+  #loginScreen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+
+  /* MAIN PANEL */
+  #mainPanel { display: none; min-height: 100vh; }
+  .panel-header {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .panel-logo { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--text); }
+  .panel-logo span { color: var(--accent); }
+  .panel-meta { font-size: 0.75rem; color: var(--text-muted); }
+  .header-actions { display: flex; gap: 0.8rem; align-items: center; }
+  .badge { font-size: 0.7rem; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+  .badge-live { background: rgba(46,204,113,0.15); color: #2ecc71; border: 1px solid rgba(46,204,113,0.3); }
+  .icon-btn { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 0.45rem 0.9rem; border-radius: 4px; font-size: 0.78rem; cursor: pointer; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+  .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .panel-body { padding: 2rem; max-width: 1100px; margin: 0 auto; }
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 2rem; }
+  .stat-box { background: var(--surface); padding: 1.4rem 1.6rem; }
+  .stat-box-num { font-size: 2rem; font-weight: 600; color: var(--accent); line-height: 1; }
+  .stat-box-label { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; }
+  .section-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem; }
+  .section-head h2 { font-size: 1rem; font-weight: 500; }
+  .add-btn { background: var(--accent); color: white; border: none; padding: 0.55rem 1.2rem; border-radius: 4px; font-size: 0.82rem; font-weight: 500; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 6px; transition: background 0.2s; }
+  .add-btn:hover { background: var(--accent-light); }
+
+  /* PRODUCT TABLE */
+  .product-table { width: 100%; border-collapse: collapse; }
+  .product-table thead tr { border-bottom: 1px solid var(--border); }
+  .product-table th { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 500; padding: 0.8rem 1rem; text-align: left; }
+  .product-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  .product-table tbody tr:hover { background: var(--surface); }
+  .product-table td { padding: 0.9rem 1rem; font-size: 0.88rem; vertical-align: middle; }
+  .product-table .td-name { font-weight: 500; }
+  .product-table .td-material { color: var(--accent-light); font-size: 0.8rem; }
+  .product-table .td-cat { font-size: 0.75rem; background: var(--surface2); padding: 3px 8px; border-radius: 3px; color: var(--text-muted); display: inline-block; }
+  .toggle { position: relative; width: 36px; height: 20px; }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider { position: absolute; inset: 0; background: var(--surface2); border-radius: 20px; cursor: pointer; transition: 0.2s; border: 1px solid var(--border); }
+  .toggle-slider::before { content: ''; position: absolute; height: 14px; width: 14px; left: 2px; top: 2px; background: var(--text-dim); border-radius: 50%; transition: 0.2s; }
+  .toggle input:checked + .toggle-slider { background: rgba(46,204,113,0.2); border-color: rgba(46,204,113,0.4); }
+  .toggle input:checked + .toggle-slider::before { transform: translateX(16px); background: #2ecc71; }
+  .row-actions { display: flex; gap: 0.5rem; }
+  .edit-btn { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 0.35rem 0.75rem; border-radius: 3px; font-size: 0.75rem; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+  .edit-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .del-btn { background: transparent; border: 1px solid transparent; color: var(--text-dim); padding: 0.35rem 0.75rem; border-radius: 3px; font-size: 0.75rem; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+  .del-btn:hover { border-color: rgba(231,76,60,0.4); color: #e74c3c; }
+
+  /* MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; display: none; align-items: center; justify-content: center; padding: 2rem; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 8px; padding: 2rem; max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto; }
+  .modal-title { font-size: 1.1rem; font-weight: 500; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+  .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.3rem; cursor: pointer; padding: 0 4px; }
+  .modal-close:hover { color: var(--text); }
+  .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .modal-grid .full { grid-column: 1 / -1; }
+  textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.7rem 1rem; color: var(--text); font-size: 0.9rem; font-family: inherit; outline: none; transition: border 0.2s; resize: vertical; min-height: 80px; }
+  textarea:focus { border-color: var(--accent); }
+  select { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.7rem 1rem; color: var(--text); font-size: 0.9rem; font-family: inherit; outline: none; }
+  select:focus { border-color: var(--accent); }
+  .modal-footer { display: flex; gap: 0.8rem; margin-top: 1.5rem; }
+  .modal-footer .btn { margin-top: 0; }
+  .save-btn { background: var(--accent); color: white; flex: 1; }
+  .cancel-btn { background: transparent; border: 1px solid var(--border2); color: var(--text-muted); flex: 0 0 auto; padding: 0.85rem 1.5rem; border-radius: 4px; font-size: 0.9rem; cursor: pointer; font-family: inherit; transition: all 0.2s; }
+  .cancel-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* TOAST */
+  #toast { position: fixed; bottom: 2rem; right: 2rem; z-index: 200; display: flex; flex-direction: column; gap: 0.5rem; }
+  .toast-item { background: var(--surface); border: 1px solid var(--border2); padding: 0.8rem 1.2rem; border-radius: 6px; font-size: 0.85rem; display: flex; align-items: center; gap: 8px; animation: slideIn 0.3s ease; max-width: 320px; }
+  .toast-item.err { border-color: rgba(231,76,60,0.4); }
+  @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+  /* SAVE STATUS */
+  #saveStatus { font-size: 0.78rem; display: flex; align-items: center; gap: 6px; }
+  #saveStatus.saving { color: var(--accent); }
+  #saveStatus.saved { color: var(--success); }
+  #saveStatus.error { color: var(--danger); }
+
+  .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-muted); }
+  .empty-state p { font-size: 0.9rem; margin-bottom: 1rem; }
+
+  .drag-handle { cursor: grab; color: var(--text-dim); padding: 0 4px; user-select: none; }
+  .drag-handle:hover { color: var(--text-muted); }
+  tr.dragging { opacity: 0.5; }
+
+  @media (max-width: 700px) {
+    .panel-body { padding: 1rem; }
+    .modal-grid { grid-template-columns: 1fr; }
+    .modal-grid .full { grid-column: 1; }
+    .product-table th:nth-child(3), .product-table td:nth-child(3),
+    .product-table th:nth-child(4), .product-table td:nth-child(4) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SETUP SCREEN -->
+<div id="setupScreen">
+  <div class="setup-card">
+    <div class="setup-logo">MMT<span>.</span>Dekorasyon</div>
+    <div class="setup-subtitle">Yönetici Paneli — İlk Kurulum</div>
+    <div id="setupAlert"></div>
+    <div class="setup-step">GitHub Bağlantısı</div>
+    <div class="form-group">
+      <label>GitHub Kullanıcı Adı</label>
+      <input type="text" id="ghUser" placeholder="örnek: ahmetyilmaz" />
+    </div>
+    <div class="form-group">
+      <label>Repository Adı</label>
+      <input type="text" id="ghRepo" placeholder="örnek: mmtdekorasyon" />
+    </div>
+    <div class="form-group">
+      <label>GitHub Personal Access Token</label>
+      <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
+      <div class="hint">
+        Token almak için: <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens</a> → New token (classic) → repo iznini seç → Generate
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Yönetici Şifresi</label>
+      <input type="password" id="adminPass" placeholder="Panele giriş şifresi belirle" />
+      <div class="hint">Bu şifre tarayıcınıza kaydedilir. Güvenli bir şifre seçin.</div>
+    </div>
+    <button class="btn" onclick="saveSetup()">Kurulumu Tamamla & Bağlan</button>
+  </div>
+</div>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" style="display:none">
+  <div class="setup-card">
+    <div class="setup-logo">MMT<span>.</span>Dekorasyon</div>
+    <div class="setup-subtitle">Yönetici Paneli</div>
+    <div id="loginAlert"></div>
+    <div class="form-group">
+      <label>Şifre</label>
+      <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()" autofocus />
+    </div>
+    <button class="btn" onclick="doLogin()">Giriş Yap</button>
+    <button class="btn btn-secondary" onclick="resetSetup()">Farklı hesapla bağlan</button>
+  </div>
+</div>
+
+<!-- MAIN PANEL -->
+<div id="mainPanel">
+  <div class="panel-header">
+    <div>
+      <div class="panel-logo">MMT<span>.</span>Dekorasyon</div>
+      <div class="panel-meta">Yönetici Paneli</div>
+    </div>
+    <div class="header-actions">
+      <span class="badge badge-live">● Canlı Site</span>
+      <div id="saveStatus"></div>
+      <button class="icon-btn" onclick="window.open('index.html','_blank')">Siteyi Gör ↗</button>
+      <button class="icon-btn" onclick="logout()">Çıkış</button>
+    </div>
+  </div>
+
+  <div class="panel-body">
+    <div class="stats-row" id="statsRow">
+      <div class="stat-box"><div class="stat-box-num" id="statTotal">0</div><div class="stat-box-label">Toplam Ürün</div></div>
+      <div class="stat-box"><div class="stat-box-num" id="statActive">0</div><div class="stat-box-label">Aktif Ürün</div></div>
+      <div class="stat-box"><div class="stat-box-num" id="statCat">0</div><div class="stat-box-label">Kategori</div></div>
+      <div class="stat-box">
+        <div class="stat-box-num" style="font-size:1rem;margin-top:4px;">
+          <a href="https://wa.me/905385168532" target="_blank" style="color:var(--success);text-decoration:none;">0538 516 8532</a>
+        </div>
+        <div class="stat-box-label">WhatsApp Hattı</div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <h2>Ürünler</h2>
+      <button class="add-btn" onclick="openModal()">+ Yeni Ürün Ekle</button>
+    </div>
+
+    <div id="alertBox"></div>
+
+    <table class="product-table" id="productTable">
+      <thead>
+        <tr>
+          <th style="width:30px"></th>
+          <th>Ürün Adı</th>
+          <th>Kategori</th>
+          <th>Malzeme</th>
+          <th>Görsel</th>
+          <th>Aktif</th>
+          <th>İşlemler</th>
+        </tr>
+      </thead>
+      <tbody id="productTbody"></tbody>
+    </table>
+    <div id="emptyState" class="empty-state" style="display:none">
+      <p>Henüz ürün eklenmemiş.</p>
+      <button class="add-btn" style="margin:0 auto" onclick="openModal()">+ İlk Ürünü Ekle</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="modalTitle">Yeni Ürün</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <input type="hidden" id="editId" />
+    <div class="modal-grid">
+      <div class="full form-group">
+        <label>Ürün Adı *</label>
+        <input type="text" id="fName" placeholder="Masif Yemek Masası" />
+      </div>
+      <div class="full form-group">
+        <label>Açıklama *</label>
+        <textarea id="fDesc" placeholder="Ürün açıklaması..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Malzeme</label>
+        <input type="text" id="fMaterial" placeholder="Meşe / Ceviz" />
+      </div>
+      <div class="form-group">
+        <label>Kategori</label>
+        <select id="fCategory">
+          <option value="Masa">Masa</option>
+          <option value="Sandalye">Sandalye</option>
+          <option value="Dolap">Dolap</option>
+          <option value="Kitaplık">Kitaplık</option>
+          <option value="TV Ünitesi">TV Ünitesi</option>
+          <option value="Koltuk">Koltuk</option>
+          <option value="Yatak">Yatak</option>
+          <option value="Özel">Özel Tasarım</option>
+          <option value="Diğer">Diğer</option>
+        </select>
+      </div>
+      <div class="full form-group">
+        <label>Görsel URL <span style="color:var(--text-dim);font-weight:400">(opsiyonel – imgur, imgbb gibi sitelere yükle)</span></label>
+        <input type="text" id="fImage" placeholder="https://i.imgur.com/..." />
+      </div>
+      <div class="form-group">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+          <label class="toggle"><input type="checkbox" id="fActive" checked /><span class="toggle-slider"></span></label>
+          Sitede Göster
+        </label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-btn" onclick="closeModal()">İptal</button>
+      <button class="btn save-btn" onclick="saveProduct()">Kaydet & Yayınla</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+let products = [];
+let cfg = null;
+let fileSHA = '';
+
+// ---- INIT ----
+function init() {
+  const saved = localStorage.getItem('mmt_cfg');
+  if (!saved) { show('setupScreen'); return; }
+  cfg = JSON.parse(saved);
+  const session = sessionStorage.getItem('mmt_auth');
+  if (session !== 'ok') { show('loginScreen'); return; }
+  show('mainPanel');
+  loadProducts();
+}
+
+function show(id) {
+  ['setupScreen','loginScreen','mainPanel'].forEach(s => {
+    document.getElementById(s).style.display = s === id ? (id === 'mainPanel' ? 'block' : 'flex') : 'none';
+  });
+}
+
+// ---- SETUP ----
+async function saveSetup() {
+  const user = v('ghUser').trim();
+  const repo = v('ghRepo').trim();
+  const token = v('ghToken').trim();
+  const pass = v('adminPass').trim();
+  if (!user || !repo || !token || !pass) { setAlert('setupAlert','Tüm alanları doldurun.','err'); return; }
+  setAlert('setupAlert','Bağlantı test ediliyor...','ok');
+  const ok = await testGitHub(user, repo, token);
+  if (!ok) { setAlert('setupAlert','GitHub bağlantısı başarısız. Kullanıcı adı, repo adı ve token\'ı kontrol edin.','err'); return; }
+  const hash = await sha256(pass);
+  localStorage.setItem('mmt_cfg', JSON.stringify({ user, repo, token, passHash: hash }));
+  sessionStorage.setItem('mmt_auth', 'ok');
+  cfg = JSON.parse(localStorage.getItem('mmt_cfg'));
+  show('mainPanel');
+  loadProducts();
+}
+
+async function testGitHub(user, repo, token) {
+  try {
+    const r = await fetch(`https://api.github.com/repos/${user}/${repo}`, {
+      headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github.v3+json' }
+    });
+    return r.ok;
+  } catch { return false; }
+}
+
+// ---- LOGIN ----
+async function doLogin() {
+  const pass = v('loginPass');
+  const hash = await sha256(pass);
+  if (hash === cfg.passHash) {
+    sessionStorage.setItem('mmt_auth', 'ok');
+    document.getElementById('loginAlert').innerHTML = '';
+    show('mainPanel');
+    loadProducts();
+  } else {
+    setAlert('loginAlert','Şifre yanlış.','err');
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('mmt_auth');
+  show('loginScreen');
+  document.getElementById('loginPass').value = '';
+}
+
+function resetSetup() {
+  if (!confirm('GitHub bağlantısını sıfırlamak istediğinize emin misiniz?')) return;
+  localStorage.removeItem('mmt_cfg');
+  sessionStorage.removeItem('mmt_auth');
+  location.reload();
+}
+
+// ---- GITHUB API ----
+async function ghGet(path) {
+  const r = await fetch(`https://api.github.com/repos/${cfg.user}/${cfg.repo}/contents/${path}`, {
+    headers: { Authorization: `token ${cfg.token}`, Accept: 'application/vnd.github.v3+json' }
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function ghPut(path, content, sha, message) {
+  const body = { message, content: btoa(unescape(encodeURIComponent(content))), sha };
+  const r = await fetch(`https://api.github.com/repos/${cfg.user}/${cfg.repo}/contents/${path}`, {
+    method: 'PUT',
+    headers: { Authorization: `token ${cfg.token}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+// ---- PRODUCTS ----
+async function loadProducts() {
+  try {
+    const data = await ghGet('products.json');
+    fileSHA = data.sha;
+    const json = decodeURIComponent(escape(atob(data.content.replace(/\n/g,''))));
+    products = JSON.parse(json);
+    renderTable();
+    updateStats();
+  } catch(e) {
+    showAlert('Ürünler yüklenemedi: ' + e.message, 'err');
+  }
+}
+
+async function saveToGitHub() {
+  setSaveStatus('saving', '⟳ Kaydediliyor...');
+  try {
+    const json = JSON.stringify(products, null, 2);
+    const result = await ghPut('products.json', json, fileSHA, 'Ürünler güncellendi – Admin Panel');
+    fileSHA = result.content.sha;
+    setSaveStatus('saved', '✓ Yayınlandı');
+    setTimeout(() => setSaveStatus('',''), 3000);
+    toast('✓ Değişiklikler siteye yayınlandı!', 'ok');
+  } catch(e) {
+    setSaveStatus('error', '✗ Hata');
+    toast('Kayıt başarısız: ' + e.message, 'err');
+  }
+}
+
+function renderTable() {
+  const tbody = document.getElementById('productTbody');
+  const empty = document.getElementById('emptyState');
+  if (!products.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  tbody.innerHTML = products.map((p, i) => `
+    <tr data-id="${p.id}">
+      <td><span class="drag-handle" title="Sırala">⠿</span></td>
+      <td class="td-name">${esc(p.name)}</td>
+      <td><span class="td-cat">${esc(p.category)}</span></td>
+      <td class="td-material">${esc(p.material)}</td>
+      <td>${p.image ? `<a href="${esc(p.image)}" target="_blank" style="color:var(--accent-light);font-size:0.78rem;">Var ↗</a>` : '<span style="color:var(--text-dim);font-size:0.78rem;">Yok</span>'}</td>
+      <td>
+        <label class="toggle">
+          <input type="checkbox" ${p.active !== false ? 'checked' : ''} onchange="toggleActive('${p.id}', this.checked)" />
+          <span class="toggle-slider"></span>
+        </label>
+      </td>
+      <td>
+        <div class="row-actions">
+          <button class="edit-btn" onclick="openModal('${p.id}')">Düzenle</button>
+          <button class="del-btn" onclick="deleteProduct('${p.id}')">Sil</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function updateStats() {
+  document.getElementById('statTotal').textContent = products.length;
+  document.getElementById('statActive').textContent = products.filter(p => p.active !== false).length;
+  document.getElementById('statCat').textContent = new Set(products.map(p => p.category)).size;
+}
+
+// ---- MODAL ----
+function openModal(id) {
+  const modal = document.getElementById('productModal');
+  if (id) {
+    const p = products.find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('modalTitle').textContent = 'Ürün Düzenle';
+    document.getElementById('editId').value = id;
+    document.getElementById('fName').value = p.name;
+    document.getElementById('fDesc').value = p.desc;
+    document.getElementById('fMaterial').value = p.material;
+    document.getElementById('fCategory').value = p.category;
+    document.getElementById('fImage').value = p.image || '';
+    document.getElementById('fActive').checked = p.active !== false;
+  } else {
+    document.getElementById('modalTitle').textContent = 'Yeni Ürün Ekle';
+    document.getElementById('editId').value = '';
+    document.getElementById('fName').value = '';
+    document.getElementById('fDesc').value = '';
+    document.getElementById('fMaterial').value = '';
+    document.getElementById('fCategory').value = 'Masa';
+    document.getElementById('fImage').value = '';
+    document.getElementById('fActive').checked = true;
+  }
+  modal.classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('productModal').classList.remove('open');
+}
+
+async function saveProduct() {
+  const name = document.getElementById('fName').value.trim();
+  const desc = document.getElementById('fDesc').value.trim();
+  if (!name || !desc) { toast('Ürün adı ve açıklama zorunlu.', 'err'); return; }
+  const editId = document.getElementById('editId').value;
+  const product = {
+    id: editId || Date.now().toString(),
+    name, desc,
+    material: document.getElementById('fMaterial').value.trim() || 'Ahşap',
+    category: document.getElementById('fCategory').value,
+    image: document.getElementById('fImage').value.trim(),
+    active: document.getElementById('fActive').checked
+  };
+  if (editId) {
+    const idx = products.findIndex(p => p.id === editId);
+    if (idx !== -1) products[idx] = product;
+  } else {
+    products.push(product);
+  }
+  closeModal();
+  renderTable();
+  updateStats();
+  await saveToGitHub();
+}
+
+async function deleteProduct(id) {
+  if (!confirm('Bu ürünü silmek istediğinize emin misiniz?')) return;
+  products = products.filter(p => p.id !== id);
+  renderTable();
+  updateStats();
+  await saveToGitHub();
+}
+
+async function toggleActive(id, active) {
+  const p = products.find(x => x.id === id);
+  if (p) { p.active = active; updateStats(); await saveToGitHub(); }
+}
+
+// ---- UTILS ----
+function v(id) { return document.getElementById(id).value; }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function setAlert(id, msg, type) {
+  document.getElementById(id).innerHTML = `<div class="alert alert-${type === 'err' ? 'err' : 'ok'}">${msg}</div>`;
+}
+function showAlert(msg, type) {
+  document.getElementById('alertBox').innerHTML = `<div class="alert alert-${type === 'err' ? 'err' : 'ok'}" style="margin-bottom:1rem">${msg}</div>`;
+  setTimeout(() => document.getElementById('alertBox').innerHTML = '', 5000);
+}
+function setSaveStatus(cls, msg) {
+  const el = document.getElementById('saveStatus');
+  el.className = cls; el.textContent = msg;
+}
+function toast(msg, type) {
+  const el = document.createElement('div');
+  el.className = 'toast-item' + (type === 'err' ? ' err' : '');
+  el.textContent = msg;
+  document.getElementById('toast').appendChild(el);
+  setTimeout(() => el.remove(), 4000);
+}
+
+async function sha256(msg) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+// close modal on overlay click
+document.getElementById('productModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+init();
+</script>
+</body>
+</html>
